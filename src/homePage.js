@@ -20,8 +20,8 @@ import {
 } from 'react-router-dom';
 import { MainMenu } from './MainMenu';
 import FixedMenu from './fixedMenu';
+// import { clientList } from './clientList';
 import logo_stacked from './logo_stacked.svg';
-
 
 /* Removed temporarily for MVP
 class SearchExistingClients extends Component {
