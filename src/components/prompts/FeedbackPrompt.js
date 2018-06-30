@@ -17,25 +17,23 @@ import { Button, Modal } from 'semantic-ui-react';
  * @param props.callback {onLeaveCallback}
  * @param props.message {string}
  * @param props.open {boolean} - Whether the modal is visible.
- * @param props.isBlocking {boolean} - A secondary flag to control modal visibility.
  * @param props.leaveText {string}
  * @param props.stayText {string}
  */
 class FeedbackPrompt extends React.Component {
+
+  // Calling resetClientIfOk sometimes
   leave = (event) => {
     event.preventDefault();
     this.props.callback(true);
   };
   stay = (event) => {
     event.preventDefault();
-    // As of 06/25/18, it goes to the first step
-    // of the form without resetting
     this.props.callback(false);
   };
 
   render() {
     const {
-      isBlocking,
       openFeedback,
       header,
       message,
@@ -43,19 +41,12 @@ class FeedbackPrompt extends React.Component {
       stayText,
     } = this.props;
 
-    // Isn't this/shouldn't this be taken care of elsewhere?
-    // If the user hasn't interacted with the form at all
-    if (!isBlocking) {
-      // just go ahead and leave without displaying prompt
-      return null;
-    }
-
     // Otherwise, set up the prompt
     var realLeave   = leaveText || 'Leave',
         realStay    = stayText || 'Stay',
         realMessage = message;
     if (message === 'default') {
-      realMessage =  'Selecting "' + realLeave + '" will erase the information you have put into the form. ' +
+      realMessage = 'Selecting "' + realLeave + '" will erase the information you have put into the form. ' +
                       'You will still be able to click it after submitting feedback.';
     }
 

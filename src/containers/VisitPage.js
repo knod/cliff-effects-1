@@ -178,6 +178,7 @@ class VisitPage extends Component {
       },
       promptData: {
         ...promptText,
+        // This never changes again. Is that ok?
         callback: closePrompt,
       },
     });
@@ -320,7 +321,6 @@ class VisitPage extends Component {
         <RenderIfTrue shouldRender={ whichPrompts.FeedbackPrompt }>
           <FeedbackPrompt
             { ...promptData }
-            isBlocking={ isBlocking }
             openFeedback={ this.openFeedback } />
         </RenderIfTrue>
         {/* Triggered by `FeedbackPrompt` & `FeedbackAnytime` */}
@@ -344,9 +344,9 @@ class VisitPage extends Component {
         {/* React nav buttons (Home/About) */}
         <RenderIfTrue shouldRender={ whichPrompts.ReactRouterLeaveListener }>
           <ReactRouterLeaveListener
+            isBlocking={ isBlocking }
             askForFeedback={ this.askForFeedback }
-            confirmer = { this.props.confirmer }
-            isBlocking={ isBlocking } />
+            confirmer = { this.props.confirmer } />
         </RenderIfTrue>
 
         {/* = LINKS? = */}
