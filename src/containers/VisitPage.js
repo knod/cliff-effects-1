@@ -58,17 +58,19 @@ class VisitPage extends Component {
       client:              clone,
       // For `FeedbackPrompt`
       promptData:          {
-        open:      false,  // Start as hidden
         message:   '',
         header:    '',
         leaveText: 'Reset',
         callback:  () => {},
       },
-      feedbackFormRequested: false,
+      whichPrompts: {
+        FeedbackForm:   false,  // Start as hidden
+        FeedbackPrompt: false,  // Start as hidden
+      },
       // Hack for MVP
-      oldHousing:            clone.current.housing,
-      userChanged:           {},
-      snippets:              props.snippets,
+      oldHousing:  clone.current.housing,
+      userChanged: {},
+      snippets:    props.snippets,
     };  // end this.state {}
 
     this.steps = [
@@ -135,19 +137,29 @@ class VisitPage extends Component {
     }
   };
 
+  setPrompt = (promptName, value) => {
+    var newPromptVals = { ...this.state.whichPrompts };
+    newPromptVals[ promptName ] = value;
+    this.setState({ whichPrompts: newPromptVals });
+  };
+
   askForFeedback = (callback, promptText) => {
 
     // When user exits feedback prompt somehow, 
     // close it before finishing the callback.
     var closePrompt = (isOk) => {
-      this.setState({ promptData: { open: false }});
+      this.setPrompt('FeedbackPrompt', false);
       callback(isOk);
     };
 
     this.setState({
+      whichPrompts: {
+        ...this.state.whichPrompts,
+        FeedbackPrompt: true,
+      },
       promptData: {
         ...promptText,
-        open:     true,
+        // This never changes again. Is that ok?
         callback: closePrompt,
       },
     });
@@ -186,7 +198,7 @@ class VisitPage extends Component {
       userChanged[ id ] = true;
     }
 
-    // Hack for MVP (otherwise need dependency + history system)
+    // Hack for MVP (otherwise need dependency and history system)
     let oldHousing = this.state.oldHousing;
     if (route === 'housing') {
       // client housing should be right now
@@ -273,6 +285,13 @@ class VisitPage extends Component {
   };  // End getCurrentStep()
 
   render() {
+    var {
+      client,
+      whichPrompts,
+      promptData,
+      isBlocking,
+    } = this.state;
+
     return (
       <div className='forms-container flex-item flex-column'>
 
@@ -281,27 +300,27 @@ class VisitPage extends Component {
         {/* Triggered by `ReactRouterLeaveListener`,
          *`ResetAnytime`, or `ErrorListener` */}
         <FeedbackPrompt
-          { ...this.state.promptData }
-          isBlocking={ this.state.isBlocking }
+          { ...promptData }
+          doShow={ whichPrompts.FeedbackPrompt }
           openFeedback={ this.openFeedback } />
         {/* Triggered by `FeedbackPrompt` & `FeedbackAnytime` */}
         <FeedbackForm
-          isOpen={ this.state.feedbackFormRequested }
+          doShow={ whichPrompts.FeedbackForm }
           close={ this.closeFeedback }
-          data={ this.state.client } />
+          data={ client } />
 
         {/* - Never visible - */}
         <ErrorListener
           callback={ this.resetClientIfOk }
-          client={ this.state.client }
+          client={ client }
           askForFeedback={ this.askForFeedback } />
         {/* Browser nav - reload/back/unload. */}
-        <BrowserLeaveListener isBlocking={ this.state.isBlocking } />
+        <BrowserLeaveListener isBlocking={ isBlocking } />
         {/* React nav buttons (Home/About) */}
         <ReactRouterLeaveListener
+          isBlocking={ isBlocking }
           askForFeedback={ this.askForFeedback }
-          confirmer = { this.props.confirmer }
-          isBlocking={ this.state.isBlocking } />
+          confirmer = { this.props.confirmer } />
 
         {/* = LINKS? = */}
         {/* We should probably remove this. If we want to

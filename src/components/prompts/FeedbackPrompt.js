@@ -22,6 +22,8 @@ import { Button, Modal } from 'semantic-ui-react';
  * @param props.stayText {string}
  */
 class FeedbackPrompt extends React.Component {
+
+  // Calling resetClientIfOk right now
   leave = (event) => {
     event.preventDefault();
     this.props.callback(true);
@@ -33,20 +35,13 @@ class FeedbackPrompt extends React.Component {
 
   render() {
     const {
-      isBlocking,
       header,
       message,
-      open,
+      doShow,
       leaveText,
       stayText,
       openFeedback,
     } = this.props;
-
-    // If the user hasn't interacted with the form at all
-    if (!isBlocking) {
-      // just go ahead and leave without displaying prompt
-      return null;
-    }
 
     // Otherwise, set up the prompt
     var realLeave   = leaveText || 'Leave',
@@ -58,7 +53,7 @@ class FeedbackPrompt extends React.Component {
     }
 
     return (
-      <Modal open={ open }>
+      <Modal open={ doShow }>
         <Modal.Header>{header || `Do you want to give feedback before you ${realLeave.toLowerCase()}?`}</Modal.Header>
         <Modal.Content>
           <p> {realMessage} </p>

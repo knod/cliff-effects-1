@@ -13,6 +13,7 @@ class ErrorListener extends React.Component {
     var promptData = {
       header:    'There was an unexpected error. Do you want to submit feedback?',
       leaveText: 'Reset',
+      message:   'default',
     };
 
     const { callback, askForFeedback } = this.props;
