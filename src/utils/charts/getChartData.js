@@ -1,9 +1,12 @@
-import _ from 'lodash';
+// DATA
 import { PROGRAM_CHART_VALUES } from '../../utils/charts/PROGRAM_CHART_VALUES';
 
 // LOGIC
 import { getSection8Benefit } from '../../programs/massachusetts/section8';
 import { getSNAPBenefits } from '../../programs/federal/snap';
+
+// OBJECT MANAGEMENT
+import _ from 'lodash';
 
 
 /** Order in which benefits must be run to affect
@@ -89,7 +92,7 @@ getData.section8 = function (xRange, client, multiplier) {
  * @param {array} benefitDatasets List of datasets, one for
  *     each benefit.
  * @param {object} benefitDatasets[n]
- * @param {string} benefitDatasets[n].name Name of the benefit
+ * @param {string} benefitDatasets[n].benefitName Name of the benefit
  * @param {array} benefitDatasets[n].data List to which output
  *     will be pushed.
  * 
@@ -105,7 +108,7 @@ const insertBenefitData = function (xRange, clone, multiplier, benefitDatasets) 
   // Otherwise, loop over incomes
   for (var incomei = 0; incomei < xRange.length; incomei++) {
     var income = xRange[ incomei ];
-    clone.future.earned = income / multiplier;
+    clone.future.earned = income / multiplier;  // turn into monthly amount
 
     // Datasets need to be in correct order for benefits to
     // affect each other corrrectly.
@@ -118,12 +121,27 @@ const insertBenefitData = function (xRange, clone, multiplier, benefitDatasets) 
       let monthlyAmount = funcs.getSubsidy(clone, `future`);
       dataset.data.push(monthlyAmount * multiplier);
 
-      // Mutate the clone in whatever way is appropriate for
-      // that program.
+      // Mutate the future values of the clone in whatever
+      // way is appropriate for that program.
       let newPropValues = funcs.getProps(clone, monthlyAmount);
       Object.assign(clone.future, newPropValues);
 
     }  // end for each benefit, in order
+
+    // placeholders
+    var getBenefits = function () {},
+        activeBenefits = [],
+        dataset = [];
+    let data = getBenefits({ state: `MA`, activeBenefits, clone, timeframe: `future` });
+
+    let { newClient, ...benefits } = data;
+
+    for (let benefiti in activeBenefits) {
+      let name = activeBenefits[ benefiti ];
+      dataset.data.push(data[ name ] * multiplier);
+    }
+
+
 
   }  // end for all incomes
 
@@ -135,7 +153,7 @@ const insertBenefitData = function (xRange, clone, multiplier, benefitDatasets) 
  * 
  * @param {array} activeBenefits List of active benefits. @todo - use object instead?
  * */
-const getDatasets = function (xRange, client, multiplier, activeBenefits, extraProps) {
+const getDatasets = function (xRange, client, multiplier, activeBenefits, extraGraphProps) {
 
   // Don't want to change actual client's data
   var clone    = _.cloneDeep(client),
@@ -155,7 +173,7 @@ const getDatasets = function (xRange, client, multiplier, activeBenefits, extraP
         backgroundColor: graphFrosting.color,
         borderColor:     graphFrosting.color,
         data:            [],  // Will be populated later
-        ...extraProps[ benefitName ],  // Override other props
+        ...extraGraphProps[ benefitName ],  // Override other props
       });
     }
   }  // end for benefits (in correct order)
@@ -165,6 +183,151 @@ const getDatasets = function (xRange, client, multiplier, activeBenefits, extraP
 
   return datasets;
 };  // End getDatasets()
+
+
+/*
+// Return array of graph data
+
+// Already have
+benefitsInOrder
+array
+
+// Don't have
+max, activeBenefits, multiplier, client, USState?
+object, array, number, object, object, string?
+
+// ========================
+// 1, based around charts
+// ========================
+getChartDatasets (USState, incomes, multiplier/timeInterval, client, activeBenefits) {
+  // Lets make incomes always monthly and they can be changed in here?
+  // `activeBenefits` should include income?
+  // Maybe `interval` instead of `multiplier`? And get multiplier in here?
+
+  var benefitDatasets = [],
+      allData         = { income: [] },  // each active benefit will have data in here
+      clone           = cloneDeep(client),;
+
+  // ABSTRACT THIS TO CONSTANTS SOMEWHERE
+  var chartOptions = { label, background, border }
+
+  var obj = {
+    clientToChange: clone,
+    state:          `MA`,
+    timeWanted:     `future`,
+    active:         activeBenefits,
+    dataToChange:   allData,
+  };
+
+  for (income in incomes) {
+    // Collect datasets in `allData`. Mutates `clone` and `allData`.
+    // MUST ADD TO EACH BENEFIT. HOW? IN MUTATOR? [yes]
+    // MUST CHANGE WITH MULTIPLIER. HOW? HERE? IN `getBenefits()`? [here]
+    getBenefits(obj);
+
+    // Adjust money amount to correct time interval (weekly, monthly, or yearly)
+    for (benefitName in activeBenefits) {
+      let val = dataToChange[ benefitName ][ indx ] * multiplier;
+      dataToChange[ benefitName ][ indx ] = val;
+    }
+  }
+
+  // Return in the same order as it was asked for
+  for (each benefitName in activeBenefits) {
+
+    // All info for that benefit
+    let dataset = {
+      ...chartOptions,
+      data: allData[ benefitName ],
+    };
+
+    benefitDatasets.push(dataset);
+  }
+
+  return benefitDatasets;
+}
+
+
+// Mutates data and client
+// addToBenefitData
+// fillInBenefitData
+accumulateBenefits ({ state, dataToChange, activeBenefits, clientToChange, timeframe }) {
+  for (benefit in benefitsInOrder) {
+
+    // If this isn't one of the benefits the caller wants
+    if (!isIn(activeBenefits, benefit)) {
+      continue;  // skip this loop
+    }
+
+    // If this benefit doesn't exist in the object, add it
+    if (!isIn(dataToChange, benefit)) {
+      dataToChange[ benefit ] = [];
+    }
+
+    var subsidy = calculateBenefit(clientToChange, timeframe);
+    mutateWithSideEffects(clientToChange[ timeframe ], subsidy); // Un-time-restricted `clientToChange`?
+
+    dataToChange[ benefit ].push(subsidy);
+  }
+
+  return;
+}
+
+
+getIncomes = (limits, multiplier) {
+  // Adjust to time-interval, round to hundreds
+  var maxIncome = Math.ceil((limits.max * multiplier) / 100) * 100,
+      interval  = Math.ceil((max / 100) / 10) * 10;
+  return _.range(limits.min, max, interval);
+};
+
+// ABSTRACT INSTEAD OF PASSING IN:
+xRange...? Using mutliplier? xRange needs min, max, interval.
+
+
+// ========================
+// 2 XXX
+// ========================
+
+// Return in the same order as it was asked for
+for (each benefitName in activeBenefits) {
+
+  // All info for that benefit
+  let dataset = {
+    ...baseDataset,
+    data: allData[ benefitName ],
+  };
+
+  let dataz = null;
+  for (income in incomes) {
+    var obj = {
+      clone: clone,
+      state: `MA`,
+      timeframe: `future`,
+      active: activeBenefits,
+      dataRepository: {},
+    };
+
+    // Collect datasets as object. Mutates clone.
+    // MUST ADD TO EACH BENEFIT. HOW? IN MUTATOR?
+    dataz = getBenefits(`MA`, clone, activeBenefits, `future`, dataRepository);
+
+  }
+
+  dataz[ benefitName ]
+
+  benefitDatasets.push(dataset);
+
+
+
+}
+
+
+
+
+
+
+*/
 
 
 export {

@@ -8,6 +8,7 @@ import { VerticalLine } from './VerticalLine';
 
 // LOGIC
 import { timescaleMultipliers } from '../../utils/convert-by-timescale';
+import { getIncomeRange } from '../../utils/getIncomeRange';
 import {
   formatAxis,
   formatLabel,
@@ -43,13 +44,9 @@ class BenefitsLineGraph extends Component {
       return <Message className={ className }>No public benefit programs have been selected</Message>;
     }
 
-    // Adjust to time-interval, round to hundreds
-    var max       = Math.ceil((limits.max * multiplier) / 100) * 100,
-        interval  = Math.ceil((max / 100) / 10) * 10;
-
-    var xRange      = _.range(limits.min, max, interval),  // x-axis/income numbers
-        extraProps  = { snap: { fill: false }, section8: { fill: false }},
-        datasets    = getDatasets(xRange, client, multiplier, activePrograms, extraProps);
+    var incomes    = getIncomeRange(limits, multiplier),  // x-axis/income numbers
+        extraProps = { snap: { fill: false }, section8: { fill: false }},
+        datasets   = getDatasets(incomes, client, multiplier, activePrograms, extraProps);
 
     // If there's no data to show, don't show the table
     if (datasets.length === 0) {
@@ -60,12 +57,12 @@ class BenefitsLineGraph extends Component {
     // have to mutate that reference
     var income  = client.future.earned * multiplier,
         hack    = this.state.verticalLine;
-    hack.xRange = xRange;
+    hack.incomes = incomes;
     hack.income = income;
 
     var lineProps = {
       data: {
-        labels:   xRange,
+        labels:   incomes,
         datasets: datasets,
       },  // end `data`
       options: {

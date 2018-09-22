@@ -7,6 +7,7 @@ import { VerticalLine } from './VerticalLine';
 
 // LOGIC
 import { timescaleMultipliers } from '../../utils/convert-by-timescale';
+import { getIncomeRange } from '../../utils/getIncomeRange';
 import {
   formatAxis,
   formatLabel,
@@ -51,24 +52,23 @@ class StackedAreaGraph extends Component {
     withIncome.unshift('income');
 
     // Adjust to time-interval, round to hundreds
-    var income        = client.future.earned * multiplier,
-        max           = Math.max(income, limits.max * multiplier),
-        xMax          = Math.ceil(max / 100) * 100,
-        xMin          = Math.ceil(limits.min * multiplier / 100) * 100,
-        interval      = Math.ceil(((xMax - xMin) / 100) / 10) * 10,
-        xRange        = _.range(xMin, xMax + interval, interval),
-        extraProps    = { income: { fill: 'origin' }},
-        datasets      = getDatasets(xRange, client, multiplier, withIncome, extraProps);
+    var withIncome = activePrograms.slice();
+    withIncome.unshift('income');
+
+    var incomes    = getIncomeRange(limits, multiplier),
+        extraProps = { income: { fill: 'origin' }},
+        datasets   = getDatasets(incomes, client, multiplier, withIncome, extraProps);
 
     // react-chartjs-2 keeps references to plugins, so we
     // have to mutate that reference
-    var hack    = this.state.verticalLine;
-    hack.xRange = xRange;
-    hack.income = income;
+    var income   = client.future.earned * multiplier,
+        hack     = this.state.verticalLine;
+    hack.incomes = incomes;
+    hack.income  = income;
 
     var stackedAreaProps = {
       data: {
-        labels:   xRange,
+        labels:   incomes,
         datasets: datasets,
       },  // end `data`
       options: {
