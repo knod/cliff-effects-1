@@ -1,7 +1,6 @@
 import { cloneDeep } from 'lodash';
 
-/**
- * Default client values.
+/** Default client values.
  * MUST ALWAYS BE VALID
  * 
  * Note: A 'positive number' money value can have more than
@@ -50,7 +49,7 @@ const CLIENT_DEFAULTS = {
     earnedBecauseOfAdultCare:      0,                // positive number
     disabledMedical:               0,                // positive number
     otherMedical:                  0,                // positive number
-    /** @todo Make housing expense values more robust. */
+    // @todo Make housing expense values more robust.
     housing:                       'homeless',       // 'homeless', 'homeowner', 'renter', 'voucher'
     contractRent:                  0,                // positive number
     rentShare:                     0,                // positive number

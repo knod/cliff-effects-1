@@ -1,4 +1,6 @@
-/** Allows insertion of provided components at specified points in a translated text block. */
+/** @module utils/interpolation.js
+ * Allows insertion of provided components at specified points in a translated text block.
+ */
 
 import React from 'react';
 

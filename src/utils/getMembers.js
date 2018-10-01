@@ -3,8 +3,7 @@
 // ACCUMULATORS
 // ===================
 
-/**
-* Creates an array containing the members in
+/** Creates an array containing the members in
 *     `memberList` that pass `memberTest()`
 */
 const getEveryMember = function (memberList, memberTest) {
@@ -25,8 +24,7 @@ const getEveryMember = function (memberList, memberTest) {
 };  // End getEveryMember()
 
 
-/**
- * Creates an array containing the members in
+/** Creates an array containing the members in
  *     a `client`s household that pass `memberTest()`
  */
 const getEveryMemberOfHousehold = function (client, memberTest) {
@@ -62,11 +60,11 @@ const getHeadOrSpouseOfHousehold = function (client) {
 
 
 // --- DEPENDENTS --- \\
-/**
+/* @todo Move this question to an appropriate location.
  * @todo Is it possible for people older than 18 to still be dependents?
  *     I think that on tax forms it's possible to claim people as
- *     dependents until age 26. */
-
+ *     dependents until age 26.
+ */
 const isDependent = function (member) {
   return (member.m_age <= 18 || member.m_disabled) && isNotHeadOrSpouse(member);
 };  // End isDependent()

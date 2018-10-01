@@ -1,4 +1,6 @@
-/** For different kinds of math operations we need, some unconventional */
+/** @module utils/math.js
+ * For different kinds of math operations we need, some unconventional
+ */
 
 const sum = function (vals) {
   var total = 0;
@@ -27,11 +29,8 @@ const moneyToWholeNum = function (val) {
 };
 
 
-/**
-* Turns a value into a float, limits it in between min and max, and
-* makes sure to return a number (not NaN).
-*
-* @todo Testing required
+/** Turns a value into a float, limits it in between min and
+*     max, and makes sure to return a number (not NaN).
 */
 const limit = function (initialVal, minMax) {
 

@@ -44,7 +44,7 @@
  *     },
  *   },
  * };
-
+ *
  * console.log(_.has(objToCompare, pathsArray[2])); // false
  * console.log(_.has(objToCompare, pathsArray[8])); // true
  * console.log(_.get(objToCompare, pathsArray[0])); // { b: '1' }

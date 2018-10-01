@@ -1,8 +1,9 @@
-/** For all income and general cash flow getters and calculators
-* 
-* @todo Add checks for properties with messages for mistakes
-* @todo Deal with expiration dates
-*/
+/** @module utils/cashflow.js
+ * For all income and general cash flow getters and calculators
+ * 
+ * @todo Add checks for properties with messages for mistakes
+ * @todo Deal with expiration dates
+ */
 
 // LOGIC
 import { sum, pick, values } from 'lodash';
@@ -21,15 +22,14 @@ import {
 // ==================================
 // DEPENDENTS
 // ==================================
-/** 
- * Total MONTHLY dependent costs, including for those under and over
+/** Total MONTHLY dependent costs, including for those under and over
  *     the age of 13 (does not include child support paid out).
  *     Dependent = child or disabled adult
  * 
  * @function
- * @param {object} client - `current` or `future` property of client data
+ * @param {object} client `current` or `future` property of client data
  * 
- * @returns {number} - Total dependent care expenses
+ * @returns {number} Total dependent care expenses
  */
 const getDependentCostsMonthly = function (client) {
   var props = UNDER13_CARE_EXPENSES.concat(OVER12_CARE_EXPENSES);
@@ -42,7 +42,7 @@ const getDependentCostsMonthly = function (client) {
  *     (does not include child support paid out).
  * 
  * @function
- * @param {object} client - `current` or `future` property of client data
+ * @param {object} client `current` or `future` property of client data
  * @returns {number}
  */
 const getUnder13Expenses = function (client) {
@@ -91,11 +91,10 @@ const getHousingCosts = function (client) {
 // STRAIGHT UP INCOME
 // ==================================
 
-/** 
- * Gets sum of all unearned monthly income of given client.
+/** Gets sum of all unearned monthly income of given client.
  * 
  * @function
- * @param {object} client - `current` or `future` property of client data
+ * @param {object} client `current` or `future` property of client data
  * 
  * @returns {number}
  */
@@ -104,14 +103,13 @@ const getGrossUnearnedIncomeMonthly = function (client) {
 };  // End getGrossUnearnedIncomeMonthly()
 
 
-/**
- * Total monthly earned and unearned income with no deductions or
+/** Total monthly earned and unearned income with no deductions or
  *     exclusions.
  * 
  * @function
- * @param {object} client - `current` or `future` property of client data
+ * @param {object} client `current` or `future` property of client data
  * 
- * @returns {number} - Total earned and unearned monthly
+ * @returns {number} Total earned and unearned monthly
  *     income with no deductions or exclusions.
  */
 const getSimpleGrossIncomeMonthly = function (client) {
@@ -125,14 +123,13 @@ const getSimpleGrossIncomeMonthly = function (client) {
 // INCOME HELPERS
 // ==================================
 
-/** 
- * Returns the sum of the requested properties of of a given object
+/** Returns the sum of the requested properties of of a given object
  * 
  * @function
- * @param {object} obj - Has the properties named in `props` with number values.
- * @param {array} props - The names of some properties in `obj` with number values.
+ * @param {object} obj Has the properties named in `props` with number values.
+ * @param {array} props The names of some properties in `obj` with number values.
  * 
- * @returns {number}
+ * @returns {number} Total of all requested props
  */
 const sumProps = function (obj, props) {
   return sum(values(pick(obj, props)));

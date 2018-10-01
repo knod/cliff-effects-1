@@ -1,4 +1,5 @@
-/** Deals with client values that are dependent
+/** @module utils/getSideEffects.js
+ * Deals with client values that are dependent
  *     on other client values. All side effect
  *     functions return objects to be added to
  *     new state.

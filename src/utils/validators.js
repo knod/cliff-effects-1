@@ -1,4 +1,4 @@
-/**
+/** @module utils/validators.js
  * Set of validating functions for making sure
  * value are what they need to be. Just for
  * numbers right now.
@@ -20,9 +20,9 @@ const isNonNegNumber = function (str) {
   return str !== '' && !/[^0-9.]|\..*\./.test(str);
 };
 
-
-/** Returns true if a string represents a positive integer */
-/** @todo Change name to 'isWholeNumber'. */
+/** Returns true if a string represents a positive integer
+/* @todo Change name to 'isWholeNumber'.
+*/
 const isNonNegWholeNumber = function (str) {
   return str !== '' && /^[0-9]*$/.test(str);
 };

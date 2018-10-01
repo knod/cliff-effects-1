@@ -1,16 +1,13 @@
-/**
+/** @module utils/valueFixers.js
  * Transformers for transforming client
  * values into valid values.
  */
 
-/**
- * Reused Functionality
- */
 const returnSame = function (newVal, state) {
   return newVal;
 };
 
-/** @todo Take regular bools out of here. */
+/** Converts known bool-like values to bools */
 const toBoolean = function (value) {
   if (value === 'Yes') {
     return true;
@@ -28,8 +25,7 @@ const stringToNumber = function (str) {
 };
 
 /**
- * For every client property and
- * nested property.
+ * Every client property and nested property must have one.
  */
 const valueFixers = {
   // Current programs
@@ -42,7 +38,6 @@ const valueFixers = {
   m_disabled:                    returnSame,
   // MONEY AMOUNTS
   // Income
-  /** @todo All incomes need transformation */
   earned:                        stringToNumber,
   TAFDC:                         stringToNumber,
   SSI:                           stringToNumber,
@@ -69,7 +64,6 @@ const valueFixers = {
   earnedBecauseOfAdultCare:      stringToNumber,
   disabledMedical:               stringToNumber,
   otherMedical:                  stringToNumber,
-  /** @todo When client has section 8, switch this to 'housingVoucher' */
   housing:                       returnSame,
   contractRent:                  stringToNumber,
   rentShare:                     stringToNumber,

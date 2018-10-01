@@ -1,4 +1,4 @@
-/**
+/** @module utils/prettifiers.js
  * Functions for making client values into values
  *     that users will see.
  */

@@ -1,12 +1,13 @@
-/**
+/** @module utils/convert-by-timescale.js
  * Convert (usually money) amounts between weekly, monthly, and yearly amounts.
+ * @todo Change `timescale` to `interval`
  */
 
 /** Returns `amount` converted from whatever 'timescale' it was before
  *     to a yearly amount
  *
- * @param {number} amount - numeric value to be converted
- * @param {string} startTimescale - timescale of the original
+ * @param {number} amount numeric value to be converted
+ * @param {string} startTimescale timescale of the original
  *     value. Can be 'weekly', 'monthly', or 'yearly'.
  */
 var toYearlyFrom = function (amount, startTimescale) {
@@ -28,8 +29,8 @@ var toYearlyFrom = function (amount, startTimescale) {
 /** Returns `amount` converted from whatever 'timescale' it was before
  *     to a monthly amount
  *
- * @param {number} amount - numeric value to be converted
- * @param {string} startTimescale - timescale of the original
+ * @param {number} amount numeric value to be converted
+ * @param {string} startTimescale timescale of the original
  *     value. Can be 'weekly', 'monthly', or 'yearly'.
  */
 var toMonthlyFrom = function (amount, startTimescale) {
@@ -51,8 +52,8 @@ var toMonthlyFrom = function (amount, startTimescale) {
 /** Returns `amount` converted from whatever 'timescale' it was before
  *     to a weekly amount
  *
- * @param {number} amount - numeric value to be converted
- * @param {string} startTimescale - timescale of the original
+ * @param {number} amount numeric value to be converted
+ * @param {string} startTimescale timescale of the original
  *     value. Can be 'weekly', 'monthly', or 'yearly'.
  */
 var toWeeklyFrom = function (amount, startTimescale) {

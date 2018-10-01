@@ -1,6 +1,4 @@
 const getgovdata = require('../../utils/getGovData');
-/** Test set up
-*/
 const undefinedString = 'undefined';
 const stringString = 'string';
 
@@ -22,7 +20,7 @@ const testYearlyLimit = function (testname, pguidelines, pitems, ppercent, expec
     }
   }); 
 };  
-/** End testYearlyLimit **/
+/* End testYearlyLimit */
 
 /* Test function for testing use of functions by yearlylimit function */
 const testAdditionalFunction = function (data, extraAmount) {
@@ -41,7 +39,7 @@ testYearlyLimit ('5. Test with items out of range', fedPovertyGuidelines, 5, und
 fedPovertyGuidelines = { 0: 0, 1: 12060, 2: 20000, eachAdditional: testAdditionalFunction };
 testYearlyLimit ('6. Test of function for each additional',fedPovertyGuidelines, 5, undefinedString,20000 + 3 * 100);
 
-/** ******** ERROR CONDITIONS THAT DO NOT NEED TO BE CHECKED ********
+/* ******** ERROR CONDITIONS THAT DO NOT NEED TO BE CHECKED ********
 * Negative numbers for int key
 * Negative number for percent
 * 0 number for percent

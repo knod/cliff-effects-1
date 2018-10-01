@@ -1,4 +1,4 @@
-/**
+/** @module utils/getTimeFrames.js
  * Abstracts current and future program and
  * income values on Predictions form
  */

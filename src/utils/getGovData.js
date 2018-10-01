@@ -1,6 +1,6 @@
 import { moneyToWholeNum } from './math';
 
-/** 
+/** @module utils/getGovData.js
 * Getting or calculating data values by leveraging common data patterns
 * we've seen so far.
 */
@@ -10,7 +10,7 @@ import { moneyToWholeNum } from './math';
  *     household members).
  * 
  * ===============================================================
- * WARNING: Be aware of what time scale (weekly, monthly or yearly)
+ * @note WARNING: Be aware of what time scale (weekly, monthly or yearly)
  *     your data uses so that you can convert to the right values.
  * ===============================================================
  * 
@@ -25,14 +25,14 @@ import { moneyToWholeNum } from './math';
  * @param {object} data Data to use to get a bracket/limit value.
  * @param {number} data.0 Never known to equal more than 0 so far.
  * @param {number} data.1 (Or any int key) Value of bracket/limit that
- * matches the number described by the key. For example, data.3 would be
- * the income limit value for a household with three members.
+ *     matches the number described by the key. For example, data.3 would be
+ *     the income limit value for a household with three members.
  * @param {number|function} data.eachAdditional Usually an amount to
- * add for each person or item over the maximum hardcoded limits. Can be a
- * function to calculate said amount based on number of extra items.
+ *     add for each person or item over the maximum hardcoded limits. Can be a
+ *     function to calculate said amount based on number of extra items.
  * @param {number} numItems Number of items (for example, household size).
  * @param {number} [percent] Multiplies the result before sending it back.
- * You'd pass in 100% as `100`.
+ *     You'd pass in 100% as `100`.
  * 
  * @returns Data value determined for the number of items, numItems, wanted.
  */
@@ -60,12 +60,6 @@ const getLimitBySize = function (data, numItems, percent) {
 
 
 /** Deals with different value types for data.eachAdditional
-* 
-* @function
-* @param {number} numExtra Number of extra items
-* @param {number|function} eachAdditional Either a number value to add
-* for each extra item or a function that will return that number.
-* 
 * @returns {number} The amount created by those extra items.
 */
 var getExtraAmount = function (data, numExtra) {
@@ -81,7 +75,7 @@ var getExtraAmount = function (data, numExtra) {
 
   } else {  // Assumed either number or falsy
 
-    /** @todo Future discussioin - flexibility vs. consistency */
+    /* @todo Future discussioin - flexibility vs. consistency */
     var overageRate = eachAdditional || 0;
     extraAmount = numExtra * overageRate;
 
@@ -91,9 +85,8 @@ var getExtraAmount = function (data, numExtra) {
 };  // End getExtraAmount()
 
 
-/** 
-* Of the keys in an object that can be converted to integers,
-* return the highest converted value.
+/** Of the keys in an object that can be converted to
+*     integers, return the highest converted value.
 */
 var getMaxIntKey = function (data) {
   var max = 0;
