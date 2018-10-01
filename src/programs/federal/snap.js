@@ -102,7 +102,7 @@ hlp.getGrossIncomeTestResult = function (client) {
   if (hlp.hasDisabledOrElderlyMember(client)) {
     isPassGrossIncomeTest = true;
   } else {
-    /** @todo must double checked in the documentation.
+    /* @todo must double checked in the documentation.
      *     Two different results in both excel calculator
      *     and website calculator */
     // minor difference "<" in website calculator logic on line 469.
@@ -123,7 +123,7 @@ hlp.isHomeless = function(client) {
   return client.housing === 'homeless';
 };
 
-/** @todo: What about housing voucher? */
+/* @todo: What about housing voucher? */
 hlp.getNonUtilityCosts = function(client) {
   var housingCost = null;
 
@@ -187,7 +187,7 @@ hlp.getMedicalDeduction = function (client) {
   var medicalDeduce = 0;
 
   if (hlp.hasDisabledOrElderlyMember(client) === true) {
-    /** @todo Add disabledAssistance too. Also, otherMedical? */
+    /* @todo Add disabledAssistance too. Also, otherMedical? */
     var medicalExpenses = client.disabledMedical;
     if ((medicalExpenses >= SNAPData.MIN_MEDICAL_EXPENSES) && (medicalExpenses <= SNAPData.MAX_MEDICAL_EXPENSES)) {
       medicalDeduce = SNAPData.STANDARD_MEDICAL_DEDUCTION;
@@ -205,13 +205,13 @@ hlp.getDependentCareDeduction = function (client) {
 
   var dependentCare = 0;
 
-  /** @todo Adopt https://github.com/codeforboston/cliff-effects/issues/264
+  /* @todo Adopt https://github.com/codeforboston/cliff-effects/issues/264
    *     model for all these 'kinds' of 'if' situations. If possible. */
   if (getUnder13OfHousehold(client).length > 0) {
     dependentCare += sumProps(client, UNDER13_CARE_EXPENSES);
   }
 
-  /** May want to test this the same way as Expenses step does. More consistent? */
+  /* May want to test this the same way as Expenses step does. More consistent? */
   if (hlp.hasDependentsOver12(client)) {
     dependentCare += sumProps(client, OVER12_CARE_EXPENSES);
   }

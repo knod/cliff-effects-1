@@ -15,21 +15,10 @@ import {
   isDisabled,
 } from '../../utils/getMembers';
 
-
-/**
-* Properties `client` object is required to have to get a valid
-* result. This doesn't mean the user filled in all the data, just
-* that the object passed into here contains everything needed in the
-* form that it's needed.
-*
-* @todo Discuss what should be required, if anything (many of these can
-* just be assumed to be 0 so that no errors will occur).
-*/
-
-/** Can only be useful in predicting future subisdy amounts.
-*
-* Uses old and new cash flow data, return new subsidy amount,
+/** Uses old and new cash flow data, return new subsidy amount,
 *     include new rent share.
+*
+* @note Can only be useful in predicting future subisdy amounts.
 *
 * var diff = new min ttp - old min ttp;
 * var new rent share = old rent share + diff;
@@ -38,17 +27,12 @@ import {
 * @function
 * @since 09/2017
 *
-* With Project Hopes's guidance, we're using old known values (as
-* known as they can get) to derive new values.
+* @note With Project Hopes's guidance, we're using old known values (as
+*     known as they can get) to derive new values.
 * @see Deriving: {@link https://docs.google.com/document/d/1o1Tm0HioHeY4NcBSDcjSbXDOjmCAJdI47kG5Fyms0UI/edit#}.
 * @see Definitions: {@link https://portal.hud.gov/hudportal/documents/huddoc?id=DOC_11749.pdf}
-*
-* @todo Find out how close to 0/change the benefit amount needs to be in
-* order for the client to be warned.
 */
 const getSection8Benefit = function (client, timeframe) {
-  /** @todo Just return number values */
-
   // Current subsidy MUST already be known in every case
   if (timeframe === 'current') {
     return client.current.contractRent - client.current.rentShare;
@@ -70,11 +54,10 @@ const getSection8Benefit = function (client, timeframe) {
 var section8Helpers = {},
     hlp             = section8Helpers;
 
-/**
-* @todo getTTPs - Get Total Tenant Payment
+/** Derive total tenant payment
 *
-* '#' refers to # item on form at Appendix B of http://www.tacinc.org/media/58886/S8MS%20Full%20Book.pdf
-* Is using raw monthly values or converting values to monthly amounts
+* @note '#' refers to # item on form at Appendix B of http://www.tacinc.org/media/58886/S8MS%20Full%20Book.pdf
+* @note Is using raw monthly values or converting values to monthly amounts
 */
 hlp.getTTPs = function (client) {
   var oldNet = hlp.getNetIncome(client, 'current'),
@@ -95,13 +78,13 @@ hlp.getTTPs = function (client) {
       newNetToTest = newNet * 0.1;
 
   /**
-  * TTP = 'total tenant payment'. One place (pg 59) calls this min ttp
-  * but another (Appendix B) calls it max. Second makes more sense.
-  * Represents max rent share.
+  * @note TTP = 'total tenant payment'. One place (pg 59) calls this min ttp
+  *     but another (Appendix B) calls it max. Second makes more sense.
+  *     Represents max rent share.
   *
-  * Note: welfare rent and PHA min rent are not known and so not
-  * included in the test. MA may not have welfare rent and PHA min
-  * can be waived.
+  * @note Welfare rent and PHA min rent are not known and so not
+  *     included in the test. MA may not have welfare rent and PHA min
+  *     can be waived.
   */
   var oldMaxTTP = Math.max(oldNetToTest, oldAdjToTest),
       newMaxTTP = Math.max(newNetToTest, newAdjToTest),
@@ -115,9 +98,6 @@ hlp.getTTPs = function (client) {
 // NET INCOME
 // =============================
 
-/**
-* @todo Function description
-*/
 hlp.getNetIncome = function (client, timeframe) {
   var unearned = getGrossUnearnedIncomeMonthly(client[ timeframe ]),
       gross    = unearned + client[ timeframe ].earned;
@@ -129,14 +109,11 @@ hlp.getNetIncome = function (client, timeframe) {
 // =============================
 // ADJUSTED INCOME
 // =============================
-/**
-* @todo Function description
+/** This is only adjusted income as defined for the Section 8 program
+*     '#' refers to # item on form at Appendix B of http://www.tacinc.org/media/58886/S8MS%20Full%20Book.pdf
+*     'pg' refers to the written page number of https://portal.hud.gov/hudportal/documents/huddoc?id=DOC_11749.pdf (gone)
 *
-* This is only adjusted income as defined for the Section 8 program
-* '#' refers to # item on form at Appendix B of http://www.tacinc.org/media/58886/S8MS%20Full%20Book.pdf
-* 'pg' refers to the written page number of https://portal.hud.gov/hudportal/documents/huddoc?id=DOC_11749.pdf (gone)
-*
-* Is using raw monthly values or converting values to monthly amounts
+* @note Is using raw monthly values or converting values to monthly amounts
 */
 hlp.getAdjustedIncome = function (client, timeframe, net) {
 
@@ -169,9 +146,9 @@ hlp.getAdjustedIncome = function (client, timeframe, net) {
 
 /**
 * Medical allowance needs assistance allowance amounts
-* '#' refers to # item on form at Appendix B of http://www.tacinc.org/media/58886/S8MS%20Full%20Book.pdf
-* 'pg' refers to the written page number of https://portal.hud.gov/hudportal/documents/huddoc?id=DOC_11749.pdf (gone)
-* Is using raw monthly values
+* @note '#' refers to # item on form at Appendix B of http://www.tacinc.org/media/58886/S8MS%20Full%20Book.pdf
+* @note 'pg' refers to the written page number of https://portal.hud.gov/hudportal/documents/huddoc?id=DOC_11749.pdf (gone)
+* @note Is using raw monthly values
 */
 hlp.getDisabledAndMedicalAllowancesSum = function (client, timeframe, net) {
 
@@ -188,7 +165,7 @@ hlp.getDisabledAndMedicalAllowancesSum = function (client, timeframe, net) {
       handicapAllowance   = hlp.getMinHandicapAllowance(client, time, assistanceRemainder);  // #10, #11
 
   // ----- Maybe Stop, #D ----- \\
-  /** Only keep going if there's a disabled/elderly head or spouse (or sole member) */
+  // Only keep going if there's a disabled/elderly head or spouse (or sole member)
   if (!hlp.hasDsbOrEldHeadOrSpouse(client, time)) { 
     return handicapAllowance; 
   }
