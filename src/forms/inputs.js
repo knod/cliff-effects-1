@@ -163,7 +163,7 @@ class ManagedNumberField extends Component {
       value = focusedVal;
     }
 
-    /** @todo Different class for something 'future' that has a current value that isn't 0 */
+    /* @todo Different class for something 'future' that has a current value that isn't 0 */
     return (
       <Form.Input
         error     = { !valid }

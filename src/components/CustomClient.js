@@ -11,7 +11,7 @@ import { Form, Message } from 'semantic-ui-react';
  */
 
 /**
- * Accept data from a JSON object and send it back.
+ * Accept data from a user's JSON object and send it to `load`.
  * 
  * @param {object} props
  * @param {load} props.load

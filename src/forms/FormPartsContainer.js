@@ -12,7 +12,7 @@ import {
 import { BigButton } from './inputs';
 
 /** For styling spacing between elements when needed.
-* @returns Component
+* @returns React element
 */
 const SpaceHolder = function () {
   return (<div className = { `space-holder` } />);
@@ -88,17 +88,17 @@ const FormBottomRow = function({ left, middle, right }) {
 
 
 /** Constructor for all the stuff that's supposed to go inside
-* the Form Component. Does not include the `<Form>` Component
-* as a container because it looks like that needs to be unique
-* (the 'CurrentBenefitsStep' gives it `size='massive'`).
+*     the Form Component. Does not include the `<Form>` Component
+*     as a container because it looks like that needs to be unique
+*     (the 'CurrentBenefitsStep' gives it `size='massive'`).
 *
 * @function
 * @param {object} props
 * @property {string} props.title - Text to go in the `h1` element.
 * @property {string} props.clarifier - Text to go in the `h3`
-* element, giving some description, instructions, or clarifications.
+*     element, giving some description, instructions, or clarifications.
 * @property {string} props.children - Component(s) to be inserted
-* into the middle - a custom form section containing inputs, etc.
+*     into the middle - a custom form section containing inputs, etc.
 * @property {Object} props.next - the 'next form section' function
 * @property {Object} props.prev - the 'previous form section' function
 *

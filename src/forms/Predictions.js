@@ -14,25 +14,26 @@ import { BenefitsLineGraph } from './output/BenefitsLineGraph';
 // ========================================
 // COMPONENTS
 // ========================================
-/** @todo description
+/** @todo Cash flow row for trying out different future incomes.
 *
 * @function
-* @param {object} props Values described below
+* @param {object} props
 * @property {object} props.future Client future/predictive data.
 * @property {string} props.time Used in class names. Meant to make
 *     this more easily decoupled in future.
 * @property {function} props.updateClientValue Update client state
-*     values.
+*     value.
+* @property {object} props.snippets Language-specific text
 *
-* @returns {class} Component
+* @returns {object} React element
 */
 const IncomeForm = function ({ future, time, updateClientValue, snippets }) {
 
   var type = 'income';
 
   /**
-  * As per Project Hope input, for the first prototype we're only
-  * including the ability to change earned income.
+  * As per Project Hope's input, for the first prototype we're only
+  *     including the ability to change earned income.
   */
   return (
     <div className='field-aligner two-column'>
@@ -117,22 +118,9 @@ const TabbedVisualizations = ({ client, snippets }) => {
   );
 };
 
-/** @todo Abstract all the step components?
- *
- * @function
- * @param {object} props See below.
- * @property {function} props.updateClientValue Updates state upstream.
- * @property {function} props.translate Uses user chosen language-specific
- *    snippets.
- * @property {object} props.client JSON object with future and current values.
- * @property {function} props.nextStep Go to next form section.
- * @property {function} props.previousStep Go to previous form section.
- *
- * @returns {object} Component
- */
+
 const PredictionsStep = function ({ updateClientValue, navData, client, snippets, openFeedback }) {
 
-  /** @todo Are these titles accurate now? */
   return (
     <FormPartsContainer
       title     = { snippets.i_title }

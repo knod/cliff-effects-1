@@ -18,7 +18,8 @@ import {
 
 
 /**
- * `children` will be a function
+ * `children` must be a function
+ * @deprecated
  */
 const RenderIfTrue = function ({ shouldRender, children }) {
   var ToRender = children;

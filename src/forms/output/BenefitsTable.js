@@ -85,7 +85,6 @@ const BenefitsTable = function ({ client, snippets }) {
       netFuture           = totalBenefitFuture + incomeFuture,
       netDiff             = totalDiff + incomeDiff;
 
-  /** @todo: linting - discuss indentation for object properties and colons */
   const columnHeaderStyle = {
           background:    'rgba(0, 181, 173, 1)',
           color:         'white',

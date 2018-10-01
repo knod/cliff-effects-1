@@ -31,8 +31,8 @@ const DevMenu = function ({ devProps, funcs, data, state }) {
     langOpts.push(lang);
   }
 
-  /** @todo If there are enough dev features for it,
-   *    make menu categories collapsible. */
+  // If there are enough dev features for it,
+  // make menu categories collapsible.
   return (
     <div>
       <Menu.Item header>> Snippets</Menu.Item>

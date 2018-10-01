@@ -4,8 +4,8 @@ import { ExternalLink } from '../forms/formHelpers';
 
 // CUSTOM COMPONENTS
 
-/** Todo simplify the process of creating content for the 'About' page */
 
+// Todo simplify the process of creating content for the 'About' page
 const AboutContent = function ({ snippets }) {
   return (
     <div>

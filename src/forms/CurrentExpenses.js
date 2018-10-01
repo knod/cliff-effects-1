@@ -244,7 +244,6 @@ const Housing = function ({ current, type, time, updateClientValue }) {
   // We're using a bunch of radio buttons. Since `checked` is defined
   // in Radio components, `updateClientValue()` would store it, but we
   // want the value, so get rid of checked.
-  /** Makes sure values are propagated to 'current' properties if needed. */
   let ensureRouteAndValue = function (evnt, inputProps) {
     var obj = { ...inputProps, name: inputProps.name, value: inputProps.value, checked: null };
     updateClientValue(evnt, obj);
@@ -293,15 +292,6 @@ const Housing = function ({ current, type, time, updateClientValue }) {
 };  // End Housing()
 
 
-/**
- * @function
- * @param {object} props
- * @param {object} props.current - Client data of current user circumstances
- * @param {object} props.time - 'current' or 'future'
- * @param {object} props.updateClientValue - Sets state values
- *
- * @returns React element
- */
 const ExpensesFormContent = function ({ current, time, updateClientValue, snippets }) {
 
   let type        = 'expense',
@@ -313,7 +303,7 @@ const ExpensesFormContent = function ({ current, time, updateClientValue, snippe
         updateClientValue: updateClientValue,
       };
 
-  /** @todo Make an age-checking function to
+  /* @todo Make an age-checking function to
    *     keep household data structure under
    *     control in one place. */
   var isOver12 = function (member) {
@@ -460,7 +450,7 @@ const ExpensesFormContent = function ({ current, time, updateClientValue, snippe
         null
       ) }
 
-      {/** These medical expenses don't count for Section 8 unless
+      {/* These medical expenses don't count for Section 8 unless
         *     the disabled person is the head or spouse. From
         *     {@link http://www.tacinc.org/media/58886/S8MS%20Full%20Book.pdf}
         *     Appendix B, item (D) */}
@@ -518,7 +508,8 @@ const ExpensesFormContent = function ({ current, time, updateClientValue, snippe
 
 };  // End ExpensesFormContent()
 
-/**
+/*
+ * @todo Move this to the SNAP calculations function script
  * @todo SNAP: Does a medical assistant's payments count as a medical expense?
  *     (Answer: Yes. @see {@link https://www.mass.gov/service-details/snap-verifications})
  * @todo SNAP: Medical expense only matters if household has elder/disabled, but
@@ -528,16 +519,6 @@ const ExpensesFormContent = function ({ current, time, updateClientValue, snippe
  *     household member?
  */
 
-/**
-  * @function
-  * @param {object} props
-  * @param {function} props.updateClientValue - Setting client state
-  * @param {function} props.previousStep - Go to previous form step
-  * @param {function} props.nextStep - Go to next form step
-  * @param {object} props.client - Object will all the data for calculating benefits
-  *
-  * @returns React element
-  */
 // `props` is a cloned version of the original props. References broken.
 const CurrentExpensesStep = function ({ updateClientValue, navData, client, snippets }) {
 

@@ -40,7 +40,7 @@ const CashFlowContainer = function ({ children, label, validRow, message }) {
 };  // End <CashFlowContainer>
 
 /** Maximum input value of yearly income allowed in the textbox,
- * monthly/daily will be scaled
+ *     monthly/daily will be scaled
  */
 const maximum_value_yearly = 999999.99;
 
@@ -53,9 +53,10 @@ const maximum_value_yearly = 999999.99;
  * @property {object} props.updateClientValue - Updates client state
  * @property {object} props.children - Text for the row label
  * 
+ * @todo Find elegant way to combine CashFlowInputsRow and
+ *     MonthlyCashFlowRow use `includes` array to include only certain
+ *     columns perhaps.
  */
-/** @todo Find elegant way to combine CashFlowInputsRow and MonthlyCashFlowRow
-      use `includes` array to include only certain columns perhaps. */
 class CashFlowInputsRow extends Component {
   constructor(props) {
     super(props);
@@ -86,15 +87,11 @@ class CashFlowInputsRow extends Component {
           obj     = { name: generic, value: monthly };
       updateClientValue(evnt, obj);
     };
-  
-    
-  
-    /** baseVal
+
+    /* baseVal
      * Get the time ('future' or 'current') monthly value unless there is
      *     none, in which case, get the 'current' monthly cash flow value
      *     (to prefill future values with 'current' ones if needed).
-     *
-     * @var
      *
      * @todo Add some kind of UI indication when it's the same as the 'current'
      *     value. What if some of the row's values are the same and some are
@@ -145,7 +142,7 @@ const CashFlowDisplayRow = function ({ generic, value, timeState, children }) {
       monthly      = toMoneyStr(baseVal),
       yearly       = toMoneyStr(baseVal * 12);
 
-  /** @todo Make label a link to the input row */
+  /* @todo Make label a link to the input row */
   return (
     <div className = { `cashflow cashflow-display` }>
       <div className = { colClassName + ` ` + generic + ` output-number` } >

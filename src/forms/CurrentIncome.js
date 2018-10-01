@@ -7,7 +7,7 @@ import { FormPartsContainer } from './FormPartsContainer';
 import { IntervalColumnHeadings } from '../components/headings';
 import { CashFlowInputsRow } from './cashflow';
 
-/**
+/*
 * @todo Figure out which programs need to know which types of incomes
 * and categorize/tag them accordingly.
 *
@@ -19,7 +19,7 @@ import { CashFlowInputsRow } from './cashflow';
 // ========================================
 // COMPONENTS
 // ========================================
-/**
+/* @todo: Move these questions to the appropriate place
 * @todo Is it possible for id's to be the same as the text in the label?
 * @todo Stuff like interest of bank accounts? (unearned income?)
 * @todo Other assets (not counted in gross income? income categories?)
@@ -35,22 +35,11 @@ import { CashFlowInputsRow } from './cashflow';
 * http://www.masslegalhelp.org/housing/financial-eligibility})
 */
 
-/** @todo description
- *
- * @function
- * @param {object} props - See below
- * @property {object} props.current - Client current info.
- * @property {string} props.time - 'current' or 'future'
- * @property {function} props.updateClientValue - Updates state upstream.
- * @property {function} props.snippets - Uses user chosen language-specific
- *
-* @returns Component
-*/
 const IncomeForm = function ({ current, time, updateClientValue, snippets }) {
 
   var type = 'income';
 
-  /** Makes sure values are propagated to 'future' properties if needed */
+  // Old: Makes sure values are propagated to 'future' properties if needed
   var ensureFuture = function (evnt, inputProps) {
     updateClientValue(evnt, { ...inputProps, fillFuture: true });
   };  // End ensureFuture()
@@ -135,16 +124,15 @@ const IncomeForm = function ({ current, time, updateClientValue, snippets }) {
 /** @todo description
  *
  * @function
- * @param {object} props - See below.
- * @property {function} props.updateClientValue - Updates state upstream.
- * @property {object} props.navData  - properties for two buttons and middle compponent TBD 
- * @property {object} props.client - JSON object with future and current values.
- * @property {function} props.snippets - Uses user chosen language-specific
+ * @param {object} props
+ * @property {function} props.updateClientValue Updates state upstream.
+ * @property {object} props.navData properties for two buttons and middle component TBD 
+ * @property {object} props.client JSON object with `future` and `current` values.
+ * @property {function} props.snippets Uses user chosen language-specific text
 *
-* @returns Component
+* @returns React element
 */
 // `props` is a cloned version of the original props. References broken.
-
 const CurrentIncomeStep = function ({ updateClientValue, navData, client, snippets }) {
 
   return (

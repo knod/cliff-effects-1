@@ -1,3 +1,7 @@
+/** @module
+ * @todo Separate into better-named files?
+ */
+
 // REACT COMPONENTS
 import React from 'react';
 import {
@@ -15,7 +19,9 @@ import { ExternalLink } from './../components/ExternalLink';
 // INPUT CONTAINER COMPONENTS
 // ========================================
 
-/** Adds an option for an 'invalid input' message to the right of the last element */
+/** Adds an option for an 'invalid input' message to the right of the last element
+ * @todo Put above input instead, using `.Top` of `<Surrounder>`
+ */
 const InvalidMessage = function ({ validRow, message }) {
 
   var result = null;
@@ -53,7 +59,6 @@ var AttentionArrow = function () {
 };  // End <AttentionArrow>
 
 
-/** @todo Separate into different files? */
 export {
   ExternalLink,
   InvalidMessage,
