@@ -5,6 +5,9 @@ import {
 } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
 
+// GLOBAL 'STATE'
+import { AnswersContext } from '../AnswersContext';
+
 // DATA MANAGEMENT
 import { setNestedProperty } from '../utils/setNestedProperty';
 import { cloneDeep } from 'lodash';
@@ -281,6 +284,13 @@ class VisitPage extends Component {
 
     return (
       <div className='forms-container flex-item flex-column'>
+        <AnswersContext>
+          {({ answers, updateAnswer }) => {
+            let newAnswer = { current: 'oof' };
+            updateAnswer(newAnswer);
+            console.log(answers.current);
+          }}
+        </AnswersContext>
         {/* = PROMPTS & PROMPT TRIGGERS = */}
         {/* - Sometimes visible - */}
         {/* Triggered by `ReactRouterLeaveListener`,
