@@ -8,6 +8,15 @@ import { Helmet } from 'react-helmet';
 
 import { Confirmer } from './utils/getUserConfirmation';
 
+// GLOBAL 'STATE'
+import {
+  AnswersContext,
+  // AnswersProvider,
+  // AnswersConsumer,
+  // AnswersBoth,
+} from './AnswersContext';
+// import { AnswersConsumer } from './AnswersContext';
+
 // CUSTOM COMPONENTS
 import HomePage from './containers/HomePage';
 import AboutPage from './containers/AboutPage';
@@ -25,6 +34,10 @@ import { CLIENT_DEFAULTS } from './utils/CLIENT_DEFAULTS';
 
 // LOCALIZATION
 import { getTextForLanguage } from './utils/getTextForLanguage';
+
+// const AnswersContext = React.createContext({
+//   name: 'Guest',
+// });
 
 /**
  * Main top-level component of the app. Contains the router that controls access
@@ -192,90 +205,101 @@ class App extends Component {
         funcs      = { toggleDistrustConfirmed: this.toggleDistrustConfirmed },
         clientData = clients.loaded;
 
+        // <AnswersContext.Provider value={this.state.clients}>
     return (
       <div
         id = { `App` }
         className = { classes }>
-        <Helmet>
-          <html lang={ langCode } />
-        </Helmet>
+          <Helmet>
+            <html lang={ langCode } />
+          </Helmet>
 
-        <HashRouter getUserConfirmation={ confirmer.getConfirmation }>
-          <div id='HashRouter'>
-            <Route
-              path="/:rest+"
-              component={ (props) => {
-                return (
-                  <Header
-                    { ...props }
-                    snippets={{ ...snippets.header, langCode: snippets.langCode }} />);
-              } } />
+          <AnswersContext.Consumer>
+            {({ answers, updateAnswer }) => {
+              console.log(answers.current);
+              let newAnswer = {current: 'blah'}
+              updateAnswer(newAnswer);
+              setTimeout(function () {console.log(answers);}, 500)
+            }}
+          </AnswersContext.Consumer>
 
-            <Switch>
+          <HashRouter getUserConfirmation={ confirmer.getConfirmation }>
+            <div id='HashRouter'>
               <Route
-                exact
-                path="/"
+                path="/:rest+"
                 component={ (props) => {
                   return (
-                    <HomePage
+                    <Header
                       { ...props }
-                      snippets={{ ...snippets.homePage, langCode: snippets.langCode }} />);
-                } } />
-              <Route
-                path="/about"
-                component={ (props) => {
-                  return (
-                    <AboutPage
-                      { ...props }
-                      snippets={{ ...snippets.aboutPage, langCode: snippets.langCode }} />);
-                } } />
-              <Route
-                path="/visit/:clientId/:visitId/:stepKey?"
-                component={ ({ match, history, ...props }) => {
-                  const { clientId, visitId, stepKey } = match.params;
-
-                  return (
-                    <VisitPage
-                      { ...props }
-                      history           = { history }
-                      clientId          = { clientId }
-                      visitId           = { visitId }
-                      stepKey           = { stepKey }
-                      distrustConfirmed = { distrustConfirmed || warningOff }
-                      funcs             = { funcs }
-                      confirmer         = { confirmer }
-                      snippets          = {{ ...snippets.visitPage, langCode: snippets.langCode }}
-                      clientData        = { clientData } />);
+                      snippets={{ ...snippets.header, langCode: snippets.langCode }} />);
                 } } />
 
-              {/* For managing our development HUD */}
-              <Route
-                path = { `/dev` }
-                component={ (props) => { return (
-                  <DevSwitch
-                    { ...props }
-                    setDev   = { this.setDev }
-                    devProps = { devProps } />
-                );} } />
-            </Switch>
+              <Switch>
+                <Route
+                  exact
+                  path="/"
+                  component={ (props) => {
+                    return (
+                      <HomePage
+                        { ...props }
+                        snippets={{ ...snippets.homePage, langCode: snippets.langCode }} />);
+                  } } />
+                <Route
+                  path="/about"
+                  component={ (props) => {
+                    return (
+                      <AboutPage
+                        { ...props }
+                        snippets={{ ...snippets.aboutPage, langCode: snippets.langCode }} />);
+                  } } />
+                <Route
+                  path="/visit/:clientId/:visitId/:stepKey?"
+                  component={ ({ match, history, ...props }) => {
+                    const { clientId, visitId, stepKey } = match.params;
 
-          </div>
-        </HashRouter>
-        <Footer snippets={{ ...snippets.footer, langCode: snippets.langCode }} />
+                    return (
+                      <VisitPage
+                        { ...props }
+                        history           = { history }
+                        clientId          = { clientId }
+                        visitId           = { visitId }
+                        stepKey           = { stepKey }
+                        distrustConfirmed = { distrustConfirmed || warningOff }
+                        funcs             = { funcs }
+                        confirmer         = { confirmer }
+                        snippets          = {{ ...snippets.visitPage, langCode: snippets.langCode }}
+                        clientData        = { clientData } />);
+                  } } />
 
-        { (devProps.dev === true) ? (
-          <DevHud
-            devProps = { devProps }
-            funcs    = { devFuncs }
-            data     = {{ default: clients.default }}
-            state    = { this.state } />
-        ) : (
-          null
-        ) }
+                {/* For managing our development HUD */}
+                <Route
+                  path = { `/dev` }
+                  component={ (props) => { return (
+                    <DevSwitch
+                      { ...props }
+                      setDev   = { this.setDev }
+                      devProps = { devProps } />
+                  );} } />
+              </Switch>
+
+            </div>
+          </HashRouter>
+          <Footer snippets={{ ...snippets.footer, langCode: snippets.langCode }} />
+
+          { (devProps.dev === true) ? (
+            <DevHud
+              devProps = { devProps }
+              funcs    = { devFuncs }
+              data     = {{ default: clients.default }}
+              state    = { this.state } />
+          ) : (
+            null
+          ) }
       </div>
     );
   };  // End render()
 }
 
+        // </AnswersContext.Provider>
 
 export default App;
