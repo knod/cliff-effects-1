@@ -7,8 +7,12 @@ let context = {};
 context.defaults     = cloneDeep(CLIENT_DEFAULTS);
 context.answers      = cloneDeep(CLIENT_DEFAULTS);
 context.loaded       = null;
-context.load         = (toLoad) => {context.loaded = toLoad};
-context.updateAnswer = (answer) => {Object.assign(context.answers, answer)};
+context.load         = (toLoad) => {
+  context.loaded = toLoad;
+};
+context.updateAnswer = (answer) => {
+  Object.assign(context.answers, answer);
+};
 
 let AnswersContext = React.createContext(context);
 

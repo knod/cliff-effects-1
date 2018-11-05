@@ -9,13 +9,7 @@ import { Helmet } from 'react-helmet';
 import { Confirmer } from './utils/getUserConfirmation';
 
 // GLOBAL 'STATE'
-import {
-  AnswersContext,
-  // AnswersProvider,
-  // AnswersConsumer,
-  // AnswersBoth,
-} from './AnswersContext';
-// import { AnswersConsumer } from './AnswersContext';
+import { AnswersContext } from './AnswersContext';
 
 // CUSTOM COMPONENTS
 import HomePage from './containers/HomePage';
@@ -210,96 +204,96 @@ class App extends Component {
       <div
         id = { `App` }
         className = { classes }>
-          <Helmet>
-            <html lang={ langCode } />
-          </Helmet>
+        <Helmet>
+          <html lang={ langCode } />
+        </Helmet>
 
-          <AnswersContext.Consumer>
-            {({ answers, updateAnswer }) => {
-              console.log(answers.current);
-              let newAnswer = {current: 'blah'}
-              updateAnswer(newAnswer);
-              setTimeout(function () {console.log(answers);}, 500)
-            }}
-          </AnswersContext.Consumer>
+        <AnswersContext.Consumer>
+          {({ answers, updateAnswer }) => {
+            console.log(answers.current);
+            let newAnswer = { current: 'blah' };
+            updateAnswer(newAnswer);
+            console.log(answers)
+          }}
+        </AnswersContext.Consumer>
 
-          <HashRouter getUserConfirmation={ confirmer.getConfirmation }>
-            <div id='HashRouter'>
+        <HashRouter getUserConfirmation={ confirmer.getConfirmation }>
+          <div id='HashRouter'>
+            <Route
+              path="/:rest+"
+              component={ (props) => {
+                return (
+                  <Header
+                    { ...props }
+                    snippets={{ ...snippets.header, langCode: snippets.langCode }} />);
+              } } />
+
+            <Switch>
               <Route
-                path="/:rest+"
+                exact
+                path="/"
                 component={ (props) => {
                   return (
-                    <Header
+                    <HomePage
                       { ...props }
-                      snippets={{ ...snippets.header, langCode: snippets.langCode }} />);
+                      snippets={{ ...snippets.homePage, langCode: snippets.langCode }} />);
+                } } />
+              <Route
+                path="/about"
+                component={ (props) => {
+                  return (
+                    <AboutPage
+                      { ...props }
+                      snippets={{ ...snippets.aboutPage, langCode: snippets.langCode }} />);
+                } } />
+              <Route
+                path="/visit/:clientId/:visitId/:stepKey?"
+                component={ ({ match, history, ...props }) => {
+                  const { clientId, visitId, stepKey } = match.params;
+
+                  return (
+                    <VisitPage
+                      { ...props }
+                      history           = { history }
+                      clientId          = { clientId }
+                      visitId           = { visitId }
+                      stepKey           = { stepKey }
+                      distrustConfirmed = { distrustConfirmed || warningOff }
+                      funcs             = { funcs }
+                      confirmer         = { confirmer }
+                      snippets          = {{ ...snippets.visitPage, langCode: snippets.langCode }}
+                      clientData        = { clientData } />);
                 } } />
 
-              <Switch>
-                <Route
-                  exact
-                  path="/"
-                  component={ (props) => {
-                    return (
-                      <HomePage
-                        { ...props }
-                        snippets={{ ...snippets.homePage, langCode: snippets.langCode }} />);
-                  } } />
-                <Route
-                  path="/about"
-                  component={ (props) => {
-                    return (
-                      <AboutPage
-                        { ...props }
-                        snippets={{ ...snippets.aboutPage, langCode: snippets.langCode }} />);
-                  } } />
-                <Route
-                  path="/visit/:clientId/:visitId/:stepKey?"
-                  component={ ({ match, history, ...props }) => {
-                    const { clientId, visitId, stepKey } = match.params;
+              {/* For managing our development HUD */}
+              <Route
+                path = { `/dev` }
+                component={ (props) => { return (
+                  <DevSwitch
+                    { ...props }
+                    setDev   = { this.setDev }
+                    devProps = { devProps } />
+                );} } />
+            </Switch>
 
-                    return (
-                      <VisitPage
-                        { ...props }
-                        history           = { history }
-                        clientId          = { clientId }
-                        visitId           = { visitId }
-                        stepKey           = { stepKey }
-                        distrustConfirmed = { distrustConfirmed || warningOff }
-                        funcs             = { funcs }
-                        confirmer         = { confirmer }
-                        snippets          = {{ ...snippets.visitPage, langCode: snippets.langCode }}
-                        clientData        = { clientData } />);
-                  } } />
+          </div>
+        </HashRouter>
+        <Footer snippets={{ ...snippets.footer, langCode: snippets.langCode }} />
 
-                {/* For managing our development HUD */}
-                <Route
-                  path = { `/dev` }
-                  component={ (props) => { return (
-                    <DevSwitch
-                      { ...props }
-                      setDev   = { this.setDev }
-                      devProps = { devProps } />
-                  );} } />
-              </Switch>
-
-            </div>
-          </HashRouter>
-          <Footer snippets={{ ...snippets.footer, langCode: snippets.langCode }} />
-
-          { (devProps.dev === true) ? (
-            <DevHud
-              devProps = { devProps }
-              funcs    = { devFuncs }
-              data     = {{ default: clients.default }}
-              state    = { this.state } />
-          ) : (
-            null
-          ) }
+        { (devProps.dev === true) ? (
+          <DevHud
+            devProps = { devProps }
+            funcs    = { devFuncs }
+            data     = {{ default: clients.default }}
+            state    = { this.state } />
+        ) : (
+          null
+        ) }
       </div>
     );
   };  // End render()
 }
 
-        // </AnswersContext.Provider>
+// </AnswersContext.Provider>
 
 export default App;
