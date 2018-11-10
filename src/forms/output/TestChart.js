@@ -68,30 +68,30 @@ class TestChartComp extends Component {
 
     // Get the current extremes as chart units/values
     const xVals = {
-            min: event.xAxis[0].min,
-            max: event.xAxis[0].max,
+            min: event.xAxis[ 0 ].min,
+            max: event.xAxis[ 0 ].max,
           },
           yVals = {
-            min: event.yAxis[0].min,
-            max: event.yAxis[0].max,
+            min: event.yAxis[ 0 ].min,
+            max: event.yAxis[ 0 ].max,
           };
 
     // Get the operations for the different axes
-    const xAxis = this.chart.xAxis[0],
-          yAxis = this.chart.yAxis[0];
+    const xAxis = this.chart.xAxis[ 0 ],
+          yAxis = this.chart.yAxis[ 0 ];
 
     // Get the pixel units so we can compare proportions
     const xPix = {
-            min: xAxis.toPixels(xVals.min),
-            max: xAxis.toPixels(xVals.max),
-          };
+      min: xAxis.toPixels(xVals.min),
+      max: xAxis.toPixels(xVals.max),
+    };
     xPix.diff = xPix.max - xPix.min;
 
     // flip y amounts because y 0 is at the top
     const yPix = {
-            min: yAxis.toPixels(yVals.max),
-            max: yAxis.toPixels(yVals.min),
-          };
+      min: yAxis.toPixels(yVals.max),
+      max: yAxis.toPixels(yVals.min),
+    };
     yPix.diff = yPix.max - yPix.min;
 
     // Make the pixel sizes match
@@ -180,16 +180,19 @@ class TestChartComp extends Component {
     
     this.maxY = 800.23445;
 
-    const plotOptions =  { line: { pointInterval: interval } },
+    const plotOptions =  { line: { pointInterval: interval }},
           chart       = { events: { selection: this.zoomProportionally }};
 
     // zoomKey doesn't work without another package
 
     return (
       <div className={ `test-chart ` + (className || ``) }>
-        <button onClick={this.zoomOut}>Zoom out</button>
+        <button onClick={ this.zoomOut }>Zoom out</button>
 
-        <HighchartsChart plotOptions={ plotOptions } chart={ chart } callback={this.getChart}>
+        <HighchartsChart
+          plotOptions = { plotOptions }
+          chart       = { chart }
+          callback    = { this.getChart }>
 
           <Chart
 
