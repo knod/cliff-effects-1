@@ -55,19 +55,141 @@ import { toFancyMoneyStr } from '../../utils/charts/chartFormatting';
 
 
 // Going to copy the benefits line graph into here
+/** @namespace */
 class TestChartComp extends Component {
+
+  zoomProportionally = (event) => {
+    // No way to know where a selection drag started
+
+    // Don't mess with resetting a selection
+    if (event.resetSelection === true) {
+      return true;  // do reset selection?
+    }
+
+    // Get the current extremes as chart units/values
+    const xVals = {
+            min: event.xAxis[0].min,
+            max: event.xAxis[0].max,
+          },
+          yVals = {
+            min: event.yAxis[0].min,
+            max: event.yAxis[0].max,
+          };
+
+    // Get the operations for the different axes
+    const xAxis = this.chart.xAxis[0],
+          yAxis = this.chart.yAxis[0];
+
+    // Get the pixel units so we can compare proportions
+    const xPix = {
+            min: xAxis.toPixels(xVals.min),
+            max: xAxis.toPixels(xVals.max),
+          };
+    xPix.diff = xPix.max - xPix.min;
+
+    // flip y amounts because y 0 is at the top
+    const yPix = {
+            min: yAxis.toPixels(yVals.max),
+            max: yAxis.toPixels(yVals.min),
+          };
+    yPix.diff = yPix.max - yPix.min;
+
+    // Make the pixel sizes match
+    let axisThatChanged = null,
+        newExtremes     = null;
+
+    // Whichever is the smaller size, match to that one
+    // Since we're matching the smallest size, will we
+    // ever hit a max or min? ...I'm going to assume no.
+
+    // If x is smaller, y has to change
+    if (xPix.diff < yPix.diff) {
+      // @todo How to pick the right ratio?
+      // const ratio = this.chart.plotHeight/this.chart.plotWidth;
+      // console.log('ratio', ratio);
+      axisThatChanged = `y`;
+      newExtremes     = this.getNewExtremes(yPix, xPix);
+    // If y is smaller, x has to change
+    } else {
+      axisThatChanged = `x`;
+      newExtremes     = this.getNewExtremes(xPix, yPix);
+    }
+
+    // Convert back to chart units because that's what
+    // `setExtremes` uses, then set those extremes.
+    if (axisThatChanged === `y`) {
+      // flip y amounts back here
+      const min = yAxis.toValue(newExtremes.max),
+            max = yAxis.toValue(newExtremes.min);
+      console.log('------- y changing');
+      console.log('x original vals:', xVals, xVals.max - xVals.min, '; y original vals:', yVals, yVals.max - yVals.min);
+      console.log('x original pix:', xPix, '; y original pixs:', yPix);
+      console.log('y new pix:', newExtremes, '; y new vals:', min, max, min - max);
+      yAxis.setExtremes(min, max);
+    } else {
+      const min = xAxis.toValue(newExtremes.min),
+            max = xAxis.toValue(newExtremes.max);
+      console.log('------- x changing');
+      console.log('x original vals:', xVals, xVals.max - xVals.min, '; y original vals:', yVals, yVals.max - yVals.min);
+      console.log('x original pix:', xPix, '; y original pixs:', yPix);
+      console.log('x new pix:', newExtremes, '; x new vals:', min, max, min - max);
+      xAxis.setExtremes(min, max);
+    }
+
+    // Don't send zoom event
+    event.preventDefault();
+    return false;
+  };  // Ends zoomProportionally()
+
+  /** Returns new min and max values using `diff`
+   *     as a guide.
+   *
+   * @param {object} current
+   * @param {number} current.min
+   * @param {number} current.diff
+   * @param {object} toMatchTo
+   * @param {number} toMatchTo.diff
+   * 
+   * @returns {object} newExtremes { min: number, max: number }
+   */
+  getNewExtremes = function (current, toMatchTo, ratio) {
+    // @todo How to use the ratio to crop the area correctly?
+    const halfDiff    = toMatchTo.diff / 2,
+          currCenter  = current.min + (current.diff / 2),
+          newExtremes = {
+            min: currCenter - halfDiff,
+            max: currCenter + halfDiff,
+          };
+
+    return newExtremes;
+  };
+
+  zoomOut = () => {
+    this.chart.zoomOut();
+  };
+
+  getChart = (chart) => {
+    this.chart = chart;
+  };
+
+
   render () {
     const { className } = this.props,
           currentEarned = 3.3056,
-          interval      = 0.07;
+          interval      = 1;
+    
+    this.maxY = 800.23445;
 
-    const plotOptions =  { line: { pointInterval: interval }};
+    const plotOptions =  { line: { pointInterval: interval } },
+          chart       = { events: { selection: this.zoomProportionally }};
 
     // zoomKey doesn't work without another package
 
     return (
       <div className={ `test-chart ` + (className || ``) }>
-        <HighchartsChart plotOptions={ plotOptions }>
+        <button onClick={this.zoomOut}>Zoom out</button>
+
+        <HighchartsChart plotOptions={ plotOptions } chart={ chart } callback={this.getChart}>
 
           <Chart
 
@@ -92,7 +214,9 @@ class TestChartComp extends Component {
             borderColor   = { `transparent`  }
             hideDelay     = { 300 } />
 
-          <XAxis endOnTick={ false }>
+          <XAxis
+            endOnTick = { false }
+            min       = { 0 }>
 
             <XAxis.Title>Pay</XAxis.Title>
             <PlotLine
@@ -106,30 +230,32 @@ class TestChartComp extends Component {
 
           </XAxis>
 
-          <YAxis endOnTick={ false }>
+          <YAxis
+            endOnTick = { false }
+            min       = { 0 }>
 
             <YAxis.Title>Benefit Value</YAxis.Title>
 
             <LineSeries data={ [
-              1.23445,
-              2.23445,
-              3.23445,
-              2.23445,
-              3.23445,
-              8.23445,
-              1.23445,
-              2.23445,
-              3.23445, 
+              100.23445,
+              200.23445,
+              300.23445,
+              200.23445,
+              300.23445,
+              800.23445,
+              100.23445,
+              200.23445,
+              300.23445, 
             ] } /><LineSeries data={ [
-              6.23445,
-              5.23445,
-              4.23445,
-              5.23445,
-              4.23445,
-              5.23445,
-              6.23445,
-              5.23445,
-              4.23445, 
+              600.23445,
+              500.23445,
+              400.23445,
+              500.23445,
+              400.23445,
+              500.23445,
+              600.23445,
+              500.23445,
+              400.23445, 
             ] } />
 
           </YAxis>
@@ -138,7 +264,7 @@ class TestChartComp extends Component {
       </div>
     );
   }  // Ends render()
-};
+};  // Ends <TestChartComp>
 
 
 const TestChart = withHighcharts(TestChartComp, Highcharts);
