@@ -1,6 +1,8 @@
 /** Functions to help transform strings for charts.
  * @module */
 
+import { withCurrency } from './prettifiers';
+
 
 /** Recursively extract text from language-specific React
  *     objects. Creates one inline string of text.
@@ -50,10 +52,9 @@ const snippetToText = function (translationObj) {
  * // <span class="graph-label">10k$</span>
  */
 const formatMoneyWithK = (chartObject, snippets) => {
-  const before    = snippetToText(snippets.i_beforeMoney),
-        after     = snippetToText(snippets.i_afterMoney),
-        // https://api.highcharts.com/highcharts/xAxis.labels.formatter
-        withMoney = before + chartObject.axis.defaultLabelFormatter.call(chartObject) + after,
+  // https://api.highcharts.com/highcharts/xAxis.labels.formatter
+  const withK     = chartObject.axis.defaultLabelFormatter.call(chartObject),
+        withMoney = withCurrency(withK, snippets),
         asHTML    = `<span class="graph-label">${withMoney}</span>`;
   return asHTML;
 };

@@ -13,17 +13,25 @@ import {
   YAxis,
   PlotLine,
   AreaSeries,
+  PlotBand,
   withHighcharts,
 } from 'react-jsx-highcharts';
 
 // LOGIC
 import { timescaleMultipliers } from '../../utils/convert-by-timescale';
 import { getChartData } from '../../utils/charts/getChartData';
-import { toFancyMoneyStr } from '../../utils/charts/chartFormatting';
+import { getAllExpenses } from '../../utils/clientExpenses';
+// All these money formatters need to be checked for duplicated work
+// and consolidated to what we really need.
+import {
+  toFancyMoneyStr,
+  withCurrency,
+  toMoneyStr,
+} from '../../utils/prettifiers';
 import {
   formatMoneyWithK,
   snippetToText,
-} from './chartStringTransformers';
+} from '../../utils/chartStringTransformers';
 
 // DATA
 import { PROGRAM_CHART_VALUES } from '../../utils/charts/PROGRAM_CHART_VALUES';
@@ -64,10 +72,11 @@ class StackedResourcesComp extends Component {
       snippets,
     } = this.props;
 
-    const multiplier    = multipliers[ timescale ],
-          resources     = [ `earned` ].concat(activePrograms),
-          currentEarned = client.current.earned * multiplier,
-          getText       = snippetToText;
+    const multiplier  = multipliers[ timescale ],
+          resources   = [ `earned` ].concat(activePrograms),
+          currentPay  = client.current.earned * multiplier,
+          getText     = snippetToText,
+          allExpenses = getAllExpenses(client.current) * multiplier;
 
     // Adjust to time-interval. Highcharts will round
     // for displayed ticks.
@@ -94,8 +103,9 @@ class StackedResourcesComp extends Component {
     }
 
     // Get 'Unexpected template string expression' warning otherwise
-    const labelHeaderFormatStart = `<span style="font-size: 10px">$`,
-          labelHeaderFormatEnd   = `{point.key:,.2f}</span><br/>`,
+    // Not sure how to use `withCurrency()` here
+    const labelHeaderFormatStart = `<span style="font-size: 10px">${getText(snippets.i_beforeMoney)}`,
+          labelHeaderFormatEnd   = `{point.key:,.2f}${getText(snippets.i_afterMoney)}</span><br/>`,
           labelHeaderFormat      = labelHeaderFormatStart + labelHeaderFormatEnd;
 
 
@@ -106,6 +116,7 @@ class StackedResourcesComp extends Component {
 
     // @todo Abstract different component attributes as frosting
     // `zoomKey` doesn't work without another package
+    // Expenses number still lacks thousands separator
     return (
       <div className={ `benefit-lines-graph ` + (className || ``) }>
         <HighchartsChart plotOptions={ plotOptions }>
@@ -140,9 +151,9 @@ class StackedResourcesComp extends Component {
 
             <XAxis.Title>{ `${timescale} ${getText(snippets.i_xAxisTitleEnd)}<br/>${getText(snippets.i_zoomInstructions)}` }</XAxis.Title>
             <PlotLine
-              value     = { currentEarned }
+              value     = { currentPay }
               useHTML   = { true }
-              label     = {{ text: `${getText(snippets.i_currentPayPlotLineLabel)}<br/>${toFancyMoneyStr(currentEarned)}`, rotation: 0 }}
+              label     = {{ text: `${getText(snippets.i_currentPayPlotLineLabel)}<br/>${toFancyMoneyStr(currentPay)}`, rotation: 0 }}
               zIndex    = { 5 }
               width     = { 2 }
               color     = { `gray` }
@@ -155,7 +166,23 @@ class StackedResourcesComp extends Component {
             labels     = {{ useHTML: true, formatter: this.formatMoneyWithK }}>
 
             <YAxis.Title>{ getText(snippets.i_benefitValue) }</YAxis.Title>
+
             { lines }
+            <PlotBand
+              id     = { `allExpensesArea` }
+              name   = { `All Expenses` }
+              label  = {{ text: `Expenses: ${withCurrency(toMoneyStr(allExpenses), snippets)}`, verticalAlign: `top`, y: 15, align: `right`, textAlign: `right`, x: -5 }}
+              from   = { 0 }
+              to     = { allExpenses }
+              color  = { `rgba(242, 113, 28, .5)` }
+              zIndex = { 3 } />
+            <PlotLine
+              id        = { `allExpensesLine` }
+              value     = { allExpenses }
+              color     = { `#f2711c` }
+              width     = { 2 }
+              dashStyle = { `ShortDot` }
+              zIndex    = { 3 } />
 
           </YAxis>
 

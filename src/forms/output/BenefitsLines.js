@@ -23,7 +23,7 @@ import { toFancyMoneyStr } from '../../utils/charts/chartFormatting';
 import {
   formatMoneyWithK,
   snippetToText,
-} from './chartStringTransformers';
+} from '../../utils/chartStringTransformers';
 
 // DATA
 import { PROGRAM_CHART_VALUES } from '../../utils/charts/PROGRAM_CHART_VALUES';

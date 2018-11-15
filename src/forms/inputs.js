@@ -125,6 +125,7 @@ class ManagedNumberField extends Component {
   constructor (props) {
     super(props);
     let { format, value } = props;
+    console.log(this.props.name, value);
     this.state = { valid: true, focused: false, focusedVal: format(value) };
   }  // End constructor()
 
